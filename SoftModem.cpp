@@ -24,8 +24,8 @@ SoftModem::~SoftModem() {
   #define TIMER_CLOCK_SELECT       (5)
   #define MICROS_PER_TIMER_COUNT   (clockCyclesToMicroseconds(128))
 #elif SOFT_MODEM_BAUD_RATE <= 1225
-  #define TIMER_CLOCK_SELECT       (4)
-  #define MICROS_PER_TIMER_COUNT   (clockCyclesToMicroseconds(64))
+  #define TIMER_CLOCK_SELECT       (4)								// set prescaler to 64
+  #define MICROS_PER_TIMER_COUNT   (clockCyclesToMicroseconds(64))  // 4µs @ 16MHz
 #else
   #define TIMER_CLOCK_SELECT       (3)
   #define MICROS_PER_TIMER_COUNT   (clockCyclesToMicroseconds(32))
@@ -53,7 +53,7 @@ SoftModem::~SoftModem() {
 #define HIGH_FREQ_CNT          (BIT_PERIOD/HIGH_FREQ_MICROS)
 #define LOW_FREQ_CNT           (BIT_PERIOD/LOW_FREQ_MICROS)
 
-#define MAX_CARRIR_BITS        (40000/BIT_PERIOD) // 40ms
+#define MAX_CARRIR_BITS        (40000/BIT_PERIOD) // max preamble length = 4% of the baudrate
 
 #define TCNT_BIT_PERIOD        (BIT_PERIOD/MICROS_PER_TIMER_COUNT)
 #define TCNT_HIGH_FREQ         (HIGH_FREQ_MICROS/MICROS_PER_TIMER_COUNT)
@@ -100,9 +100,9 @@ void SoftModem::begin(void)
 	_lastDiff = _lowCount = _highCount = 0;
 
 	TCCR2A = 0;
-	TCCR2B = TIMER_CLOCK_SELECT;
-	ACSR   = _BV(ACIE) | _BV(ACIS1);   // set Analog Comparator Interrupt Enable  | trgger on falling edge
-	DIDR1  = _BV(AIN1D) | _BV(AIN0D); // digital port off
+	TCCR2B = TIMER_CLOCK_SELECT;	   // Timer 2 in normal mode, prescaler depending on TIMER_CLOCK_SELECT
+	ACSR   = _BV(ACIE) | _BV(ACIS1);   // set Analog Comparator Interrupt Enable  | trigger on falling edge
+	DIDR1  = _BV(AIN1D) | _BV(AIN0D);  // Digital Input Disable, to reduce power consumption
 }
 
 void SoftModem::end(void)
@@ -115,10 +115,10 @@ void SoftModem::end(void)
 
 void SoftModem::demodulate(void)
 {
-	uint8_t t = TCNT2;  //get time in Timer 2
+	uint8_t t = TCNT2;  		// get time in Timer 2
 	uint8_t diff;
 	
-	if(TIFR2 & _BV(TOV2)){   // Timer 2 overflow
+	if(TIFR2 & _BV(TOV2)){   	// Timer 2 overflow
 		TIFR2 |= _BV(TOV2);
 		diff = (255 - _lastTCNT) + t + 1;
 	}
@@ -156,7 +156,6 @@ void SoftModem::demodulate(void)
 	}
 }
 
-//analog voltage compare interrupt (AIN0 and AIN1)
 ISR(ANALOG_COMP_vect)
 {
 	SoftModem::activeObject->demodulate();
@@ -207,7 +206,6 @@ void SoftModem::recv(void)
 	}
 }
 
-//timer2 interrupt
 ISR(TIMER2_COMPA_vect)
 {
 	OCR2A += (uint8_t)TCNT_BIT_PERIOD;
@@ -259,10 +257,10 @@ void SoftModem::modulate(uint8_t b)
 		cnt--;
 		{
 			OCR2B += tcnt;
-			TIFR2 |= _BV(OCF2B);
-			while(!(TIFR2 & _BV(OCF2B)));
+			TIFR2 |= _BV(OCF2B);	// clears the Output Compare Flag 2B
+			while(!(TIFR2 & _BV(OCF2B)));	// wait until compare match occurs
 		}
-		*_txPortReg ^= _txPortMask;
+		*_txPortReg ^= _txPortMask;		// toggle output
 		{
 			OCR2B += tcnt2;
 			TIFR2 |= _BV(OCF2B);
