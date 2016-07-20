@@ -59,10 +59,10 @@ SoftModem::~SoftModem() {
 #define TCNT_HIGH_FREQ         (HIGH_FREQ_MICROS/MICROS_PER_TIMER_COUNT)
 #define TCNT_LOW_FREQ          (LOW_FREQ_MICROS/MICROS_PER_TIMER_COUNT)
 
-#define TCNT_HIGH_TH_L         (TCNT_HIGH_FREQ * 0.80)
+#define TCNT_HIGH_TH_L         (TCNT_HIGH_FREQ * 0.90)
 #define TCNT_HIGH_TH_H         (TCNT_HIGH_FREQ * 1.15)
 #define TCNT_LOW_TH_L          (TCNT_LOW_FREQ * 0.85)
-#define TCNT_LOW_TH_H          (TCNT_LOW_FREQ * 1.20)
+#define TCNT_LOW_TH_H          (TCNT_LOW_FREQ * 1.10)
 
 #if SOFT_MODEM_DEBUG_ENABLE
 static volatile uint8_t *_portLEDReg;
