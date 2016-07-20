@@ -267,10 +267,10 @@ void SoftModem::modulate(uint8_t b)
 		cnt--;
 		{
 			OCR2B += tcnt;
-			TIFR2 |= _BV(OCF2B);	// clears the Output Compare Flag 2B
-			while(!(TIFR2 & _BV(OCF2B)));	// wait until compare match occurs
+			TIFR2 |= _BV(OCF2B);
+			while(!(TIFR2 & _BV(OCF2B)));
 		}
-		*_txPortReg ^= _txPortMask;		// toggle output
+		*_txPortReg ^= _txPortMask;
 		{
 			OCR2B += tcnt2;
 			TIFR2 |= _BV(OCF2B);
