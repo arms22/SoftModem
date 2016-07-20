@@ -56,4 +56,4 @@ A shield is available at [Elechouse](http://www.elechouse.com/elechouse/index.ph
 ![Schematic](http://www.elechouse.com/elechouse/images/product/softmodem/Arduino%20softmodem-5.jpg)
 
 ##License
-?
+BSD 3
