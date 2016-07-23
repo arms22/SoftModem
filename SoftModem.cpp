@@ -128,13 +128,13 @@ void SoftModem::demodulate(void)
 	if(diff > (uint8_t)(TCNT_LOW_TH_H))
 		return;
 	
-	// 移動平均
+	// Calculating the moving average
 	_lastDiff = (diff >> 1) + (diff >> 2) + (_lastDiff >> 2);
 	
 	if(_lastDiff >= (uint8_t)(TCNT_LOW_TH_L)){
 		_lowCount += _lastDiff;
 		if(_recvStat == INACTIVE){
-			// スタートビット検出
+			// Start bit detection
 			if(_lowCount >= (uint8_t)(TCNT_BIT_PERIOD * 0.5)){
 				_recvStat = START_BIT;
 				_highCount = 0;
@@ -156,7 +156,7 @@ void SoftModem::demodulate(void)
 	}
 }
 
-// アナログコンパレータ割り込み
+// Analog comparator interrupt
 ISR(ANALOG_COMP_vect)
 {
 	SoftModem::activeObject->demodulate();
@@ -166,7 +166,7 @@ void SoftModem::recv(void)
 {
 	uint8_t high;
 	
-	// ビット論理判定
+	// Bit logic determination
 	if(_highCount > _lowCount){
 		_highCount = 0;
 		high = 0x80;
@@ -176,7 +176,7 @@ void SoftModem::recv(void)
 		high = 0x00;
 	}
 	
-	// スタートビット受信
+	// Start bit reception
 	if(_recvStat == START_BIT){
 		if(!high){
 			_recvStat++;
@@ -185,27 +185,27 @@ void SoftModem::recv(void)
 			goto end_recv;
 		}
 	}
-	// データビット受信
+	// Data bit reception
 	else if(_recvStat <= DATA_BIT) {
 		_recvBits >>= 1;
 		_recvBits |= high;
 		_recvStat++;
 	}
-	// ストップビット受信
+	// Stop bit reception
 	else if(_recvStat == STOP_BIT){
 		if(high){
-			// 受信バッファに格納
+			// Stored in the receive buffer
 			uint8_t new_tail = (_recvBufferTail + 1) & (SOFT_MODEM_RX_BUF_SIZE - 1);
 			if(new_tail != _recvBufferHead){
 				_recvBuffer[_recvBufferTail] = _recvBits;
 				_recvBufferTail = new_tail;
 			}
 			else{
-				;// オーバーランエラー
+				;// Overrun error detection
 			}
 		}
 		else{
-			;// フレミングエラー
+			;// Fleming error detection
 		}
 		goto end_recv;
 	}
@@ -216,7 +216,7 @@ void SoftModem::recv(void)
 	}
 }
 
-// タイマー2比較一致割り込みA
+// Timer 2 compare match interrupt A
 ISR(TIMER2_COMPA_vect)
 {
 	OCR2A += (uint8_t)TCNT_BIT_PERIOD;
@@ -289,20 +289,21 @@ void SoftModem::modulate(uint8_t b)
 
 size_t SoftModem::write(const uint8_t *buffer, size_t size)
 {
-	// プリアンブルビット
+	// To calculate the preamble bit length
 	uint8_t cnt = ((micros() - _lastWriteTime) / BIT_PERIOD) + 1;
 	if(cnt > MAX_CARRIR_BITS){
 		cnt = MAX_CARRIR_BITS;
 	}
+	// Preamble bit transmission
 	for(uint8_t i = 0; i<cnt; i++){
 		modulate(HIGH);
 	}
 	size_t n = size;
 	while (size--) {
 		uint8_t data = *buffer++;
-		// スタート1ビット
+		// Start bit transmission
 		modulate(LOW);
-		// データ8ビット
+		// Data bit transmission
 		for(uint8_t mask = 1; mask; mask <<= 1){
 			if(data & mask){
 				modulate(HIGH);
@@ -311,10 +312,10 @@ size_t SoftModem::write(const uint8_t *buffer, size_t size)
 				modulate(LOW);
 			}
 		}
-		// ストップ1ビット
+		// Stop bit transmission
 		modulate(HIGH);
 	}
-	// ポストアンブルビット
+	// Postamble bit transmission
 	modulate(HIGH);
 	_lastWriteTime = micros();
 	return n;
