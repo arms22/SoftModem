@@ -29,6 +29,7 @@
 //#define SOFT_MODEM_RX_BUF_SIZE (32)
 
 #define SOFT_MODEM_DEBUG_ENABLE  (0)
+#define SOFT_MODEM_MOVING_AVERAGE_ENABLE  (0)
 
 class SoftModem : public Stream
 {

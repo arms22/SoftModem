@@ -129,8 +129,12 @@ void SoftModem::demodulate(void)
 		return;
 	
 	// Calculating the moving average
+#if SOFT_MODEM_MOVING_AVERAGE_ENABLE
 	_lastDiff = (diff >> 1) + (diff >> 2) + (_lastDiff >> 2);
-	
+#else
+	_lastDiff = diff;
+#endif
+
 	if(_lastDiff >= (uint8_t)(TCNT_LOW_TH_L)){
 		_lowCount += _lastDiff;
 		if(_recvStat == INACTIVE){
