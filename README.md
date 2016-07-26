@@ -3,14 +3,14 @@ SoftModem
 
 Audio Jack Modem Library for Arduino, using FSK modulation with 1225 baud. Read this [blog post](http://translate.google.com/translate?js=y&prev=_t&hl=en&ie=UTF-8&layout=1&eotf=1&u=http%3A%2F%2Farms22.blog91.fc2.com%2Fblog-entry-350.html&sl=auto&tl=en) for a detailed explanation.
 
+
+### Arduino Library Manager
+Open the Arduino Library Manager and search for 'SoftModem'.
+
 ### Manual install
 Create a folder 'SoftModem' inside your `libraries` folder and place these files there. 
 
-### Arduino Library Manager (not working yet)
-Open the Arduino Library Manager and search for 'SoftModem'.
-
-
-### Usage
+### Use
 This is an example sketch that forwards data to/from the serial port.
 
 ```Arduino
