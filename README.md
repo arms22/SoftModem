@@ -14,12 +14,26 @@ Projects based on SoftModem:
 
 
 ### Install via Arduino Library Manager
-Open the Arduino Library Manager from the menu: `Sketch → Include Library → Manage Libraries...`. Then search for 'SoftModem' and click install.
+Open the Arduino Library Manager from the menu: `Sketch → Include Library → Manage Libraries...`. 
+Then search for 'SoftModem' and click install.
 
 ### Manual install
 Create a folder 'SoftModem' inside your `libraries` folder and place these files there. 
 
-### Use
+## Supported Boards
+
+- ATmega328: Arduino Uno / Nano / Pro / Pro Mini / Fio
+- ATtiny85, ATmega32U4: not implemented yet, contributions welcome!
+
+__Pin Mappings:__
+
+|       Board      | TX Pin | RX Pin | AIN1 Pin | Timer | Notes |
+|:----------------:|:------:|:------:|:--------:|:-----:|:-----:|
+|    Arduino Uno   |    3   |    6   |     7    |   2   |       |
+|                  |        |        |          |       |       |
+
+
+## Usage
 This is an example sketch that forwards data to/from the serial port.
 
 ```Arduino
