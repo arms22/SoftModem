@@ -25,9 +25,8 @@ Create a folder 'SoftModem' inside your `libraries` folder and place these files
 - ATmega328: Arduino Uno / Nano / Pro / Pro Mini / Fio
 - ATtiny85, ATmega32U4: not implemented yet, contributions welcome!
 
-__Pin Mappings:__
 
-|       Board      | TX Pin | RX Pin | AIN1 Pin | Timer | Notes |
+|       Board      | TX pin | RX pin | AIN1 pin | Timer | Notes |
 |:----------------:|:------:|:------:|:--------:|:-----:|:-----:|
 |    Arduino Uno   |    3   |    6   |     7    |   2   |       |
 |                  |        |        |          |       |       |
