@@ -1,16 +1,38 @@
+![SoftModem](extras/softmodem.jpg)
+
 SoftModem
 ====
 
-Audio Jack Modem Library for Arduino, using FSK modulation with 1225 baud. Read this [blog post](http://translate.google.com/translate?js=y&prev=_t&hl=en&ie=UTF-8&layout=1&eotf=1&u=http%3A%2F%2Farms22.blog91.fc2.com%2Fblog-entry-350.html&sl=auto&tl=en) for a detailed explanation.
+SoftModem is a wired, low-cost and platform independent solution for communication between an Arduino and mobile phones. It uses the phone's audio jack and Bell 202 modem-like FSK encoding with up to 1225 bit/s. Check out this [blog post](http://translate.google.com/translate?js=y&prev=_t&hl=en&ie=UTF-8&layout=1&eotf=1&u=http%3A%2F%2Farms22.blog91.fc2.com%2Fblog-entry-350.html&sl=auto&tl=en).
 
 
-### Arduino Library Manager
-Open the Arduino Library Manager and search for 'SoftModem'.
+Projects based on SoftModem:
+
+- [SoftModemTerminal](https://github.com/arms22/arms22/tree/master/SoftModemTerminal) by Arms22: an iOS SoftModem terminal application
+- [FSK-Serial-Generator](https://github.com/NeoCat/FSK-Serial-Generator-in-JavaScript) by NeoCat: a JavaScript transmitter implementation
+- [WebJack](https://github.com/publiclab/webjack) by PublicLab: a JavaScript transmitter and receiver, compatible with [Firmata.js](https://github.com/firmata/firmata.js/)/[Jonny-Five](http://johnny-five.io/)
+
+
+### Install via Arduino Library Manager
+Open the Arduino Library Manager from the menu: `Sketch → Include Library → Manage Libraries...`. 
+Then search for 'SoftModem' and click install.
 
 ### Manual install
 Create a folder 'SoftModem' inside your `libraries` folder and place these files there. 
 
-### Use
+## Supported Boards
+
+- ATmega328: Arduino Uno / Nano / Pro / Pro Mini / Fio
+- ATtiny85, ATmega32U4: not implemented yet, contributions welcome!
+
+
+|       Board      | TX pin | RX pin | AIN1 pin | Timer | Notes |
+|:----------------:|:------:|:------:|:--------:|:-----:|:-----:|
+|    Arduino Uno   |    3   |    6   |     7    |   2   |       |
+|                  |        |        |          |       |       |
+
+
+## Usage
 This is an example sketch that forwards data to/from the serial port.
 
 ```Arduino
@@ -51,9 +73,9 @@ void loop() {
 SoftModem uses Timer2, therefore you can not make use of the `analogWrite()` function for  pins 3 and 11 in your sketch.
 
 ### Hardware
-A shield is available at [Elechouse](http://www.elechouse.com/elechouse/index.php?main_page=product_info&cPath=90_92&products_id=2199). Of course you can build your own. Use this schematic:
+A shield is available [here](https://www.switch-science.com/catalog/600/) or [here](http://www.elechouse.com/elechouse/index.php?main_page=product_info&cPath=90_92&products_id=2199). You can also build your own. Here is the schematic:
 
-![Schematic](http://www.elechouse.com/elechouse/images/product/softmodem/Arduino%20softmodem-5.jpg)
+![Schematic](extras/schematic.png)
 
 ##License
-BSD 3
+[BSD 3](https://github.com/arms22/SoftModem/blob/master/LICENSE)
