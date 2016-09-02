@@ -6,6 +6,8 @@ void setup() {
 	Serial.begin(115200);
 	Serial.println("Booting");
 	delay(100);
+
+	// for mega use modem.setTxPin(9);
 	modem.begin();
 }
 

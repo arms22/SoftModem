@@ -1,9 +1,5 @@
 #include "SoftModem.h"
 
-#define TX_PIN  (3)
-#define RX_PIN1 (6)  // AIN0
-#define RX_PIN2 (7)  // AIN1
-
 SoftModem *SoftModem::activeObject = 0;
 
 SoftModem::SoftModem() {
@@ -73,17 +69,17 @@ enum { START_BIT = 0, DATA_BIT = 8, STOP_BIT = 9, INACTIVE = 0xff };
 
 void SoftModem::begin(void)
 {
-	pinMode(RX_PIN1, INPUT);
-	digitalWrite(RX_PIN1, LOW);
+	pinMode(_rxPin1, INPUT);
+	digitalWrite(_rxPin1, LOW);
 	
-	pinMode(RX_PIN2, INPUT);
-	digitalWrite(RX_PIN2, LOW);
+	pinMode(_rxPin2, INPUT);
+	digitalWrite(_rxPin2, LOW);
 	
-	pinMode(TX_PIN, OUTPUT);
-	digitalWrite(TX_PIN, LOW);
+	pinMode(_txPin, OUTPUT);
+	digitalWrite(_txPin, LOW);
 	
-	_txPortReg = portOutputRegister(digitalPinToPort(TX_PIN));
-	_txPortMask = digitalPinToBitMask(TX_PIN);
+	_txPortReg = portOutputRegister(digitalPinToPort(_txPin));
+	_txPortMask = digitalPinToBitMask(_txPin);
 	
 #if SOFT_MODEM_DEBUG_ENABLE
 	_portLEDReg = portOutputRegister(digitalPinToPort(13));
@@ -328,4 +324,13 @@ size_t SoftModem::write(const uint8_t *buffer, size_t size)
 size_t SoftModem::write(uint8_t data)
 {
 	return write(&data, 1);
+}
+
+void SoftModem::setTxPin(uint8_t txPin) {
+	_txPin = txPin;
+}
+
+void SoftModem::setRxPins(uint8_t rxPin1, uint8_t rxPin2) {
+	_rxPin1 = rxPin1;
+	_rxPin2 = rxPin2;
 }
