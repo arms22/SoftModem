@@ -3,6 +3,10 @@
 
 #include <Arduino.h>
 
+#define DEFAULT_TX_PIN  (3)
+#define DEFAULT_RX_PIN1 (6)
+#define DEFAULT_RX_PIN2 (7) 
+
 //#define SOFT_MODEM_BAUD_RATE   (126)
 //#define SOFT_MODEM_LOW_FREQ    (882)
 //#define SOFT_MODEM_HIGH_FREQ   (1764)
@@ -45,6 +49,10 @@ private:
 	uint8_t _recvBuffer[SOFT_MODEM_RX_BUF_SIZE];
 	uint8_t _lowCount;
 	uint8_t _highCount;
+	uint8_t _txPin = DEFAULT_TX_PIN;
+	uint8_t _rxPin1 = DEFAULT_RX_PIN1; // AIN0
+	uint8_t _rxPin2 = DEFAULT_RX_PIN2; // AIN1
+
     unsigned long _lastWriteTime;
 	void modulate(uint8_t b);
 public:
@@ -60,6 +68,8 @@ public:
 	virtual size_t write(uint8_t data);
 	void demodulate(void);
 	void recv(void);
+	void setTxPin(uint8_t txPin);
+	void setRxPins(uint8_t rxPin1, uint8_t rxPin2);
 	static SoftModem *activeObject;
 };
 
